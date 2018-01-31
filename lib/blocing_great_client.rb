@@ -1,15 +1,21 @@
-require 'rubygems'
+# require 'rubygems'
 require 'httparty' 
 
 class BlocingGreatClient
   include HTTParty
-    # base_uri 'https://www.bloc.io/api/v1'
+  base_uri 'https://www.bloc.io/api/v1'
 
   def initialize(email, password)
-    # @url = 'https://www.bloc.io/api/v1'
-    options = { query: { email: email, password: password} }
-    response = self.class.post('https://www.bloc.io/api/v1/sessions', options)
-    @auth_token = response["auth_token"]
+    auth = { email: email, password: password }
+    options = { query: auth }
+    response = self.class.post('/sessions', options)
+    
+    @auth_token = response['auth_token']
     puts response
   end
 end
+
+# self.class.post?
+# auth = { email: email, password: password }
+# options = { basic_auth: auth }
+# response = self.class.get('/sessions', options)
