@@ -1,0 +1,40 @@
+PATH
+  remote: .
+  specs:
+    blocing_great_client (0.0.1)
+      httparty (~> 0.13)
+      json
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (10.0.0)
+    diff-lcs (1.3)
+    httparty (0.15.6)
+      multi_xml (>= 0.5.2)
+    json (2.1.0)
+    multi_xml (0.6.0)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
+    rspec-core (3.7.1)
+      rspec-support (~> 3.7.0)
+    rspec-expectations (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-mocks (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-support (3.7.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  blocing_great_client!
+  byebug
+  rspec (~> 3.0)
+
+BUNDLED WITH
+   1.14.6

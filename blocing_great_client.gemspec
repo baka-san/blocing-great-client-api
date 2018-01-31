@@ -12,5 +12,11 @@ Gem::Specification.new do |s|
     'http://rubygems.org/gems/blocing_great_client'
   s.license       = 'MIT'
   s.add_runtime_dependency 'httparty', '~> 0.13'
-  s.add_development_dependency "rspec", "~> 3.0"
+  if RUBY_VERSION.match(/^1/)
+    s.add_runtime_dependency 'json', '< 2.0'
+  else
+    s.add_runtime_dependency 'json'
+  end
+  s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'byebug'
 end
