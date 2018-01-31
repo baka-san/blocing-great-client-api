@@ -1,4 +1,3 @@
-# require 'rubygems'
 require 'httparty' 
 
 class BlocingGreatClient
@@ -7,9 +6,9 @@ class BlocingGreatClient
 
   def initialize(email, password)
     auth = { email: email, password: password }
-    options = { query: auth }
-    response = self.class.post('/sessions', options)
-    
+    options = { basic_auth: auth }
+    response = self.class.get('/sessions', options)
+
     @auth_token = response['auth_token']
     puts response
   end
