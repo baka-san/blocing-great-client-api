@@ -1,10 +1,10 @@
 module Roadmap
   # Retrieve the roadmap
   # Ex: 37, found in get_me for current
-  def get_roadmap(roadmap_id)
-    # roadmap_id = roadmap_id || self.get_me['current_enrollment']['roadmap_id']
+  def get_roadmap(roadmap_id = @current_user["current_enrollment"]["roadmap_id"])
     response = self.class.get("/roadmaps/#{roadmap_id}", @options)
-    response_json = JSON.parse(response.body)
+    @roadmap = JSON.parse(response.body)
+    puts JSON.pretty_generate(@roadmap, { indent: "  " })
   end
 
 
@@ -12,6 +12,7 @@ module Roadmap
   # Ex: >2300, found in get_roadmap
   def get_checkpoint(checkpoint_id)
     response = self.class.get("/checkpoints/#{checkpoint_id}", @options)
-    response_json = JSON.parse(response.body)
+    @checkpoint = JSON.parse(response.body)
+    puts JSON.pretty_generate(@checkpoint, { indent: "  " })
   end
 end
