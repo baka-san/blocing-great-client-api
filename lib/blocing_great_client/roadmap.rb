@@ -9,7 +9,7 @@ module Roadmap
 
 
   # Retrieve a checkpoint
-  # Ex: >2300, found in get_roadmap
+  # Ex: 2156, found in get_roadmap
   def get_checkpoint(checkpoint_id)
     response = self.class.get("/checkpoints/#{checkpoint_id}", @options)
     @checkpoint = JSON.parse(response.body)

@@ -46,11 +46,9 @@ class BlocingGreatClient
   # To reply to an old message, input token found via bloc.get_messages["items"][#]["token"]
   # For a new chat thread, leave chat_token blank
   def create_message(message_body, message_subject = nil, chat_token = nil)
-    sender_email = @current_user["email"]
-    recipient_id = @current_user["current_enrollment"]["mentor_id"]
     body = {
-      sender: sender_email, 
-      recipient_id: recipient_id,
+      sender: @current_user["email"], 
+      recipient_id: @current_user["current_enrollment"]["mentor_id"],
       token: chat_token,
       subject: message_subject,
       'stripped-text': message_body
@@ -61,6 +59,21 @@ class BlocingGreatClient
     response = self.class.post("/messages", options)
     @new_message = JSON.parse(response.body)
     puts JSON.pretty_generate(@new_message, { indent: "  " })
+  end
+
+  # Submit an assignment
+  # checkpoint_id via @checkpoint["id"], e.g. 2162
+  # assignment_branch = GitHub name of branch e.g. assignment-22-iterative-search checkpoint-8-checkpoint-submission
+  # assignment_commit_link = GitHub commit link for the assignment e.g. https:/github.com/me/repo/commit/5
+  def create_submission(checkpoint_id, assignment_branch = nil, assignment_commit_link = nil, comment = nil)
+    # body = {
+    #     "enrollment_id": @current_user["current_enrollment"]["id"],
+    #     "checkpoint_id": checkpoint_id,
+    #     "assignment_branch": assignment_branch,
+    #     "assignment_commit_link": assignment_commit_link,
+    #     comment: comment
+    # }
+
   end
 
 end
