@@ -1,51 +1,36 @@
 # require 'rubygems'
 require 'httparty' 
+require './lib/blocing_great_client/roadmap'
 
 class BlocingGreatClient
   include HTTParty
+  include Roadmap
   base_uri 'https://www.bloc.io/api/v1'
 
   # Log in a user, initializing an auth token
   def initialize(email, password)
-    auth = { email: email, password: password }
+    response = self.class.post('/sessions', { query: { email: email, password: password } })
+    auth_token = response['auth_token']
     headers = {
-      content_type: 'application/json'
+      content_type: 'application/json',
+      authorization: auth_token
     }
-    options = { query: auth, headers: headers }
-    response = self.class.post('/sessions', options)
-
-    @auth_token = response['auth_token']
-    # puts response
+    @options = { headers: headers }
   end
 
   # Retrieve current user
   def get_me
-    headers = {
-      content_type: 'application/json',
-      authorization: @auth_token
-    }
-    options = { headers: headers }
-    response = self.class.get('/users/me', options)
-    response_json = JSON.parse(response.body)
+    response = self.class.get('/users/me', @options)
+    @current_user = JSON.parse(response.body)
   end
 
   # Retrieve mentor availability
-  def get_mentor_availability
-    headers = {
-      content_type: 'application/json',
-      authorization: @auth_token
-    }
-
-    current_user = self.get_me
-    student_id = current_user['id']
-    mentor_id = current_user['current_enrollment']['mentor_id']
-
-    options = { headers: headers}
-    url = "/mentors/#{mentor_id}/student_availability"
-    response = self.class.get(url, options)
+  # Ex: 946, found in get_me
+  def get_mentor_availability(mentor_id = nil)
+    mentor_id = mentor_id || self.get_me['current_enrollment']['mentor_id']
+    response = self.class.get("/mentors/#{mentor_id}/student_availability", @options)
     response_json = JSON.parse(response.body)
   end
-
 end
 
 # self.class.post?
