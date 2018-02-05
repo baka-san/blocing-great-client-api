@@ -12,7 +12,7 @@ class BlocingGreatClient
     auth_token = response["auth_token"]
     raise "Invalid Email or Password. Try Again." if auth_token.nil?
     headers = {
-      content_type: "application/json",
+      # 'content-type': "application/json",
       authorization: auth_token
     }
     @options = { headers: headers}
@@ -46,57 +46,43 @@ class BlocingGreatClient
   # Create new message to your mentor
   # To reply to an old message, input token found via bloc.get_messages["items"][#]["token"]
   # For a new chat thread, leave chat_token blank
-  def create_message(message_body, message_subject = "nil", chat_token = "nil")
+  def create_message(message_body, message_subject = nil, chat_token = nil)
     body = {
       sender: @current_user["email"], 
       recipient_id: @current_user["current_enrollment"]["mentor_id"],
-      # token: chat_token,
-      # subject: message_subject,
-      'stripped-text': message_body
+      "stripped-text": message_body
     }
 
-    options = @options
-    options[:body] = body
-    # options[:headers][:accept] = 'application/json'
-    puts "options = #{options}"
-
-    response = self.class.post("/messages", options)
-
-    puts "response.headers = #{response.headers}"
-    puts "response.body = #{response.body}"
-    puts "response.request = #{response.request}"
-    puts "response.response = #{response.response}"
-    puts "response = #{response}"
-
-    # @new_message = JSON.parse(response.body)
-    # puts JSON.pretty_generate(@new_message, { indent: "  " })
+    body[:token] = chat_token if chat_token
+    body[:subject] = message_subject if message_subject
+    @options[:body] = body
+    response = self.class.post("/messages", @options)
+    puts "Message Sent!"
   end
 
   # Submit an assignment
   # checkpoint_id via @checkpoint["id"], e.g. 2162
   # assignment_branch = Name of GitHub branch e.g. checkpoint-8-checkpoint-submission
   # assignment_commit_link = GitHub commit link for the assignment e.g. https://github.com/baka-san/blocing_great_client/tree/checkpoint-8-checkpoint-submission
-  def create_submission(checkpoint_id, assignment_branch = "nil", assignment_commit_link = "nil", comment = "nil")
+  def create_submission(checkpoint_id, assignment_branch = nil, assignment_commit_link = nil, comment = nil)
     body = {
         enrollment_id: @current_user["current_enrollment"]["id"],
-        checkpoint_id: checkpoint_id,
-        assignment_branch: assignment_branch,
-        assignment_commit_link: assignment_commit_link,
-        comment: comment
+        checkpoint_id: checkpoint_id
     }
 
-    options = @options
-    options[:body] = body
-    response = self.class.post("/checkpoint_submissions", options)
+    body[:assignment_branch] = assignment_branch if assignment_branch
+    body[:assignment_commit_link] = assignment_commit_link if assignment_commit_link
+    body[:comment] = comment if comment
+
+    @options[:body] = body
+    response = self.class.post("/checkpoint_submissions", @options)
     puts body
     puts "response.headers = #{response.headers}"
     puts "response.body = #{response.body}"
     puts "response.request = #{response.request}"
     puts "response.response = #{response.response}"
     puts "response = #{response}"
-
-    @new_submission = JSON.parse(response.body)
-    puts JSON.pretty_generate(@new_message, { indent: "  " })
+    puts "Checkpoint Submitted!"
   end
 
 end
@@ -113,5 +99,7 @@ end
 # bloc.create_message("# Wow, this is a blocing great message!", "Test message via Blocing Great Client")
 
 # bloc.create_submission(2162, "checkpoint-8-checkpoint-submission", "https://github.com/baka-san/blocing_great_client/tree/checkpoint-8-checkpoint-submission", "I sure hope this works...")
+
+# bloc.create_submission(2161, "checkpoint-8-checkpoint-submission", "https://github.com/baka-san/blocing_great_client/tree/checkpoint-8-checkpoint-submission", "I sure hope this works...")
 
 
